@@ -1,0 +1,8 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/crazy_db
+        username: alma
+        password: alma
+    sql:
+      init:
+          mode: always
