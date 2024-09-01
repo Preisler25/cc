@@ -7,3 +7,5 @@ services:
       POSTGRES_DB: crazy_db
       POSTGRES_USER: alma
       POSTGRES_PASSWORD: alma
+    ports:
+        - "5432:5432"
