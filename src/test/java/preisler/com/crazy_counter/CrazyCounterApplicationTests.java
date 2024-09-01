@@ -8,6 +8,7 @@ class CrazyCounterApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
