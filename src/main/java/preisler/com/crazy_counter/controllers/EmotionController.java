@@ -1,15 +1,22 @@
 package preisler.com.crazy_counter.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import preisler.com.crazy_counter.models.Emotion;
+import preisler.com.crazy_counter.services.EmotionService;
+
+import java.util.Date;
+import java.util.List;
 
 @RestController
 public class EmotionController {
 
     @RequestMapping(value="/get", method = RequestMethod.GET)
-    public String index() {
-        return "crazy!!! :D";
+    public List<Emotion> GetEmotions(){
+        return EmotionService.GetEmotionByDate();
     }
-    
+
+    @RequestMapping(value = "/set", method =  RequestMethod.POST)
+    public void AddNewEmotion(){
+        return;
+    }
 }
