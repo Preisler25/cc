@@ -1,22 +1,35 @@
 package preisler.com.crazy_counter.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import preisler.com.crazy_counter.models.Emotion;
 import preisler.com.crazy_counter.services.EmotionService;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequestMapping("/emotions")
 public class EmotionController {
 
-    @RequestMapping(value="/get", method = RequestMethod.GET)
-    public List<Emotion> GetEmotions(){
-        return EmotionService.GetEmotionByDate();
+    @Autowired
+    private EmotionService emotionService;
+
+    // Endpoint to get emotions by date and userId
+    @GetMapping("/byDate")
+    public List<Emotion> getEmotionsByDate(@RequestParam String date, @RequestParam Integer userId) {
+        return emotionService.GetEmotionByDate(date, userId);
     }
 
-    @RequestMapping(value = "/set", method =  RequestMethod.POST)
-    public void AddNewEmotion(){
-        return;
+    // Endpoint to add a new emotion
+    @PostMapping("/add")
+    public void addEmotion(@RequestParam Integer userId, @RequestParam String emotion,
+                           @RequestParam String icon, @RequestParam String date, @RequestParam Integer value) {
+        emotionService.AddNewEmotion(userId, emotion, icon, date, value);
+    }
+
+    // Endpoint to delete an emotion by ID
+    @DeleteMapping("/delete/{id}")
+    public void deleteEmotion(@PathVariable Integer id) {
+        emotionService.deleteEmotionById(id);
     }
 }

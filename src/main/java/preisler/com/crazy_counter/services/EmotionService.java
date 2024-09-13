@@ -1,23 +1,30 @@
 package preisler.com.crazy_counter.services;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import preisler.com.crazy_counter.models.Emotion;
+import preisler.com.crazy_counter.repositories.EmotionRepository;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class EmotionService {
-    public static List<Emotion> GetEmotionByDate(){
-        List<Emotion> EmorionList = new ArrayList<>();
-        EmorionList.add(new Emotion("alma", "alma", new Date(), 1));
-        EmorionList.add(new Emotion("Love", "heart", new Date(),1));
-        return EmorionList;
+
+    @Autowired
+    private EmotionRepository emotionRepository;
+
+    // Retrieve emotions by user ID and date
+    public List<Emotion> GetEmotionByDate(String date, Integer userId) {
+        return (List<Emotion>) emotionRepository.findByDate(date, userId);
     }
 
-    public  static void AddNewEmotion(){
-        return;
+    // Insert a new emotion
+    public void AddNewEmotion(Integer userId, String emotion, String icon, String date, Integer value) {
+        emotionRepository.insertEmotion(userId, emotion, icon, date, value);
+    }
+
+    // Delete an emotion by ID
+    public void deleteEmotionById(Integer id) {
+        emotionRepository.deleteEmotionById(id);
     }
 }
