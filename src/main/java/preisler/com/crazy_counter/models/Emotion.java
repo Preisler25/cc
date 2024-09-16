@@ -4,16 +4,20 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="emotions")
+@Table(name = "emotions")
 public class Emotion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    String name;
-    String emoji;
-    Date date;
-    Integer user_id;
 
+    private String name;
+    private String emoji;
+
+    @Temporal(TemporalType.DATE)  // Use this to map Java's Date to SQL DATE
+    private Date date;
+
+    private Integer user_id;
 
 
     public Emotion() {

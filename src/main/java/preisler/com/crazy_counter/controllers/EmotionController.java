@@ -1,18 +1,19 @@
 package preisler.com.crazy_counter.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import preisler.com.crazy_counter.models.Emotion;
 import preisler.com.crazy_counter.services.EmotionService;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/emotions")
 public class EmotionController {
 
-    @Autowired
-    private EmotionService emotionService;
+    private final EmotionService emotionService;
+
+    public EmotionController(EmotionService emotionService) {
+        this.emotionService = emotionService;
+    }
 
     // Endpoint to get emotions by date and userId
     @GetMapping("/byDate")
