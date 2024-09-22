@@ -6,8 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import preisler.com.crazy_counter.models.Emotion;
-import preisler.com.crazy_counter.repositories.EmotionRepository;
-import preisler.com.crazy_counter.services.EmotionService;
+import preisler.com.crazy_counter.emotion.EmotionEntity;
+import preisler.com.crazy_counter.emotion.EmotionRepository;
+import preisler.com.crazy_counter.emotion.EmotionService;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -49,15 +50,15 @@ class CrazyCounterApplicationTests {
 		Date date2 = new Date();  // Current date
 
 		// Mock the behavior of the EmotionRepository with Date objects
-		Emotion emotion1 = new Emotion("happy", "😀", date1, 1);
-		Emotion emotion2 = new Emotion("sad", "😢", date2, 1);
+		EmotionEntity emotion1 = new EmotionEntity("happy", "😀", date1, 1);
+		EmotionEntity emotion2 = new EmotionEntity("sad", "😢", date2, 1);
 
 		// Mock repository responses using Date for the date field
 		when(emotionRepository.findByDateAndUserId(date1, 1))
 				.thenReturn(Arrays.asList(emotion1));
 
 		// Test GetEmotionByDate method
-		List<Emotion> emotions = emotionService.GetEmotionByDate(formatter.format(date1), 1);
+		List<EmotionEntity> emotions = emotionService.GetEmotionByDate(formatter.format(date1), 1);
 		assertEquals(1, emotions.size());
 
 		// Test AddNewEmotion method

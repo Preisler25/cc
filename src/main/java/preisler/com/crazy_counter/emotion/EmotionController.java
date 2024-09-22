@@ -1,8 +1,6 @@
-package preisler.com.crazy_counter.controllers;
+package preisler.com.crazy_counter.emotion;
 
 import org.springframework.web.bind.annotation.*;
-import preisler.com.crazy_counter.models.Emotion;
-import preisler.com.crazy_counter.services.EmotionService;
 
 import java.util.List;
 @RestController
@@ -17,7 +15,7 @@ public class EmotionController {
 
     // Endpoint to get emotions by date and userId
     @GetMapping("/byDate")
-    public List<Emotion> getEmotionsByDate(@RequestParam String date, @RequestParam Integer userId) {
+    public List<EmotionEntity> getEmotionsByDate(@RequestParam String date, @RequestParam Integer userId) {
         return emotionService.GetEmotionByDate(date, userId);
     }
 

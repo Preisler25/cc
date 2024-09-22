@@ -1,8 +1,7 @@
-package preisler.com.crazy_counter.services;
+package preisler.com.crazy_counter.emotion;
 
 import org.springframework.stereotype.Service;
 import preisler.com.crazy_counter.models.Emotion;
-import preisler.com.crazy_counter.repositories.EmotionRepository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,8 +27,8 @@ public class EmotionService {
     }
 
     // Retrieve emotions by user ID and date
-    public List<Emotion> GetEmotionByDate(String date, Integer userId) {
-        return (List<Emotion>) emotionRepository.findByDate(date, userId);
+    public List<EmotionEntity> GetEmotionByDate(String date, Integer userId) {
+        return (List<EmotionEntity>) emotionRepository.findByDate(date, userId);
     }
 
     // Insert a new emotion

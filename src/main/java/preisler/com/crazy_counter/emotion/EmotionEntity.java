@@ -1,11 +1,11 @@
-package preisler.com.crazy_counter.models;
+package preisler.com.crazy_counter.emotion;
 import jakarta.persistence.*;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "emotions")
-public class Emotion {
+public class EmotionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class Emotion {
     private Integer user_id;
 
 
-    public Emotion() {
+    public EmotionEntity() {
     }
 
-    public Emotion(String name, String emoji, Date date, Integer user_id) {
+    public EmotionEntity(String name, String emoji, Date date, Integer user_id) {
         this.name = name;
         this.emoji = emoji;
         this.date = date;
