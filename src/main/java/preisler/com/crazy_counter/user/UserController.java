@@ -1,5 +1,8 @@
 package preisler.com.crazy_counter.user;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,8 +16,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserEntity login(@RequestBody UserDTO userDTO) {
-        return userService.login(userDTO.getName(), userDTO.getPassword());
+    public ResponseEntity<UserEntity> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+        UserEntity user = userService.login(userDTO.getName(), userDTO.getPassword());
+
+        // Store userId in session after successful login
+        HttpSession session = request.getSession();
+        session.setAttribute("userId", user.getId());
+
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/register")
