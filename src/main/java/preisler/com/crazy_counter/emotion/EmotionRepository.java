@@ -7,7 +7,6 @@ import java.util.Date;
 
 public interface EmotionRepository extends JpaRepository<EmotionEntity, Long> {
 
-
     //findByDateAndUserId
     @Query(value = "SELECT * FROM emotions WHERE date = ?1 AND user_id = ?2", nativeQuery = true)
     Iterable<EmotionEntity> findByDateAndUserId(Date date, Integer userId);

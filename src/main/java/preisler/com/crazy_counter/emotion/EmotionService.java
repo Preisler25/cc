@@ -1,7 +1,6 @@
 package preisler.com.crazy_counter.emotion;
 
 import org.springframework.stereotype.Service;
-import preisler.com.crazy_counter.models.Emotion;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

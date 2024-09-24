@@ -14,8 +14,8 @@ public class EmotionController {
     }
 
     // Endpoint to get emotions by date and userId
-    @GetMapping("/byDate")
-    public List<EmotionEntity> getEmotionsByDate(@RequestParam String date, @RequestParam Integer userId) {
+    @GetMapping("/byDate/{date}/{userId}")
+    public List<EmotionEntity> getEmotionsByDate(@PathVariable String date, @PathVariable Integer userId) {
         return emotionService.GetEmotionByDate(date, userId);
     }
 
