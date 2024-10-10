@@ -4,26 +4,37 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import preisler.com.crazy_counter.security.JwtTokenProvider;
+
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserEntity> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-        UserEntity user = userService.login(userDTO.getName(), userDTO.getPassword());
+    public ResponseEntity<UserSendBack> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+        UserSendBack user = userService.login(userDTO.getName(), userDTO.getPassword());
 
         // Store userId in session after successful login
         HttpSession session = request.getSession();
-        session.setAttribute("userId", user.getId());
 
-        return ResponseEntity.ok(user);
+
+        // Generate JWT token
+        String jwtToken = jwtTokenProvider.generateToken(userDTO.getName());
+
+        //sendback jwt
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("jwtToken", jwtToken);
+
+        return ResponseEntity.ok().header("Authorization", "Bearer" + jwtToken).body(user);
     }
 
     @PostMapping("/register")

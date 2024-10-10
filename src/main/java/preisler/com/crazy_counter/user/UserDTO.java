@@ -1,6 +1,11 @@
 package preisler.com.crazy_counter.user;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class UserDTO {
     private String name;
     private String password;
@@ -12,20 +17,5 @@ public class UserDTO {
             this.password = password;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
 }
 

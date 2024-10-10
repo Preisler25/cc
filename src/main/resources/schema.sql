@@ -12,3 +12,28 @@ CREATE Table if not exists "emotions" (
     user_id integer not null,
     FOREIGN KEY(user_id) REFERENCES "users"(id)
 );
+
+/*
+@Entity
+@Table(name = "exercises")
+public class Exercise {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private int user_id;
+    private String name;
+    private int reps;
+    private int weight;
+    @Temporal(TemporalType.DATE)
+    private Date work_out_date;
+*/
+
+CREATE Table if not exists "exercises" (
+    id serial primary key,
+    user_id integer not null,
+    name varchar(255) not null,
+    reps integer not null,
+    weight integer not null,
+    work_out_date date not null,
+    FOREIGN KEY(user_id) REFERENCES "users"(id)
+);

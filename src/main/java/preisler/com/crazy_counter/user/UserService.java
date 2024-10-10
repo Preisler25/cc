@@ -15,7 +15,7 @@ public class UserService {
         this.encoder = encoder;
     }
 
-    public UserEntity login(String name, String password) {
+    public UserSendBack login(String name, String password) {
         // Find user by name
         UserEntity user = userRepository.findByName(name);
 
@@ -27,7 +27,7 @@ public class UserService {
         if (!encoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("Wrong password");
         }
-        return user;
+        return new UserSendBack(user.getName(), user.getId());
     }
 
     public void register(String name, String password) {
