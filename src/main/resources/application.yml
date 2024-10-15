@@ -8,5 +8,5 @@ spring:
           mode: always
 
 jwt:
-    secret: almadsadasdkas123askd22kq3231k31kdsakdkaskdsakdksakdkakkdksakdksakdkasdkaskdkaskdksakdksakdksa
-    expiration: 900
+    secret: kx0EPBndowHiXz/Tcxiu0fNIx4LAQDz3tKc/nE3KvXggxcJ9ltOPbAv0CZIX2ltFvaEwgmqZ9VxPhddBcoiEbg==
+    expiration: 900000

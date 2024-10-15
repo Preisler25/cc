@@ -1,8 +1,10 @@
 package preisler.com.crazy_counter.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,44 +18,64 @@ public class JwtTokenProvider {
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
-    private long jwtExpirationMs;
+    private int jwtExpirationInSeconds;
 
-    public String generateToken(String username) {
+    public String generateToken(String id) {
+        System.out.println("--------generateToken---------");
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInSeconds);
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(id)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
-    // Get username from the token
-    //public String getUsernameFromToken(String token) {
-    //    return getClaimFromToken(token, Claims::getSubject);
-    //}
 
-    // Get expiration date from the token
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
     // Extract username from JWT token
-    public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
+    public String getUserIdFromToken(String token) {
+        System.out.println("--------getUserIdFromToken---------");
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
 
-        return claims.getSubject();
+        System.out.println("Sec: " + jwtSecret);
+        System.out.println("Token: " + token);
+        try {
+            System.out.println("try");
+            return Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .setAllowedClockSkewSeconds(60)
+                    .parseClaimsJws(token)
+                    .getBody().getSubject();
+        } catch (SignatureException e) {
+            throw new RuntimeException("Invalid JWT signature");
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JWT token" + e.getMessage());
+        }
     }
-
     // Validate token
     public boolean validateToken(String token) {
+        System.out.println("--------validateToken---------");
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-            return true;
+            Jws<Claims> jwt = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            if (jwt.getBody().getExpiration().before(new Date())) {
+                System.out.println("Expired");
+                return false;
+            }
+            System.out.println("Not Expired");
+            return !jwt.getBody().getExpiration().before(new Date());
+
+
         } catch (Exception e) {
             System.out.println("Invalid JWT Token: " + e.getMessage());
         }

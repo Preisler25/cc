@@ -23,18 +23,10 @@ public class UserController {
     public ResponseEntity<UserSendBack> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
         UserSendBack user = userService.login(userDTO.getName(), userDTO.getPassword());
 
-        // Store userId in session after successful login
-        HttpSession session = request.getSession();
-
-
         // Generate JWT token
-        String jwtToken = jwtTokenProvider.generateToken(userDTO.getName());
+        String jwtToken = jwtTokenProvider.generateToken(user.getId().toString());
 
-        //sendback jwt
-        session.setAttribute("userId", user.getId());
-        session.setAttribute("jwtToken", jwtToken);
-
-        return ResponseEntity.ok().header("Authorization", "Bearer" + jwtToken).body(user);
+        return ResponseEntity.ok().header("Authorization", "Bearer " + jwtToken).body(user);
     }
 
     @PostMapping("/register")

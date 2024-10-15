@@ -12,7 +12,7 @@ public class ExerciseService {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public Iterable<ExerciseEntity> findByUserId(Integer userId) {
+    public Iterable<ExerciseEntity> findByUserId(Integer  userId) {
         return exerciseRepository.findByUserId(userId);
     }
 

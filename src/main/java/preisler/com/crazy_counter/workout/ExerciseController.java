@@ -1,41 +1,30 @@
 package preisler.com.crazy_counter.workout;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import preisler.com.crazy_counter.security.JwtTokenProvider;
+
+import java.util.Date;
 
 
 @RestController
 @RequestMapping("/exercise")
 public class ExerciseController {
     private final ExerciseService exerciseService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public ExerciseController(ExerciseService exerciseService) {
+    public ExerciseController(ExerciseService exerciseService, JwtTokenProvider jwtTokenProvider) {
         this.exerciseService = exerciseService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
      @GetMapping("/getById")
-     public Iterable<ExerciseEntity> getExercisesByUserId(HttpServletRequest request) {
-        System.out.println("------getExercisesByUserId------");
-
-        Object sessID =  request.getSession().getAttribute("userId");
-        Object sessJWT = request.getSession().getAttribute("jwtToken");
-
+     public ResponseEntity<Iterable<ExerciseEntity>> getExercisesByUserId(HttpServletRequest request) {
         String jwt = request.getHeader("Authorization");
-
-         if (sessID == null || sessJWT == null) {
-             return null;
-
-         }
-
-         int intSessID = Integer.parseInt(sessID.toString());
-         System.out.println(sessID);
-         System.out.println(sessJWT);
-         System.out.println(jwt);
-
-        //get userId from jwt token
-
-
-        return exerciseService.findByUserId(intSessID);
+        String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+        String NewJwt = jwtTokenProvider.generateToken(userId);
+        return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(exerciseService.findByUserId(Integer.parseInt(userId)));
      }
 
      @GetMapping("/getByDate")
@@ -44,8 +33,20 @@ public class ExerciseController {
      }
 
      @PostMapping("/insert")
-     public void insertExercise(@RequestBody ExerciseEntity exercise) {
-         exerciseService.insertExercise(exercise);
+     public ResponseEntity<Boolean> insertExercise(@RequestBody ExerciseDTO exerciseDTO, HttpServletRequest request) {
+            String jwt = request.getHeader("Authorization");
+            String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+
+            Date date = new Date();
+
+            ExerciseEntity exercise = new ExerciseEntity(Integer.parseInt(userId), exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
+            String NewJwt = jwtTokenProvider.generateToken(userId);
+            try {
+                exerciseService.insertExercise(exercise);
+                return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
+            } catch (Exception e) {
+                return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(false);
+            }
      }
 
 }

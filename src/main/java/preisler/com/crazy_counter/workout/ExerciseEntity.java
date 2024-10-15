@@ -3,7 +3,6 @@ package preisler.com.crazy_counter.workout;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Date;
 
 @Setter
@@ -22,10 +21,12 @@ public class ExerciseEntity {
     private Date work_out_date;
 
 
-    public ExerciseEntity(String name, int reps, int weight) {
+    public ExerciseEntity(int user_id, String name, int reps, int weight, Date work_out_date) {
+        this.user_id = user_id;
         this.name = name;
         this.reps = reps;
         this.weight = weight;
+        this.work_out_date = work_out_date;
     }
 
     public ExerciseEntity() {
