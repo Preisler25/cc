@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import preisler.com.crazy_counter.security.JwtTokenProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -31,6 +32,41 @@ public class ExerciseController {
      public Iterable<ExerciseEntity> getExercisesByDate(@RequestParam Integer id, @RequestParam String date) {
          return exerciseService.findByDate(date, id);
      }
+
+     @DeleteMapping("/delete")
+        public ResponseEntity<Boolean> deleteExercise(@RequestParam Long id, HttpServletRequest request) {
+            String jwt = request.getHeader("Authorization");
+            String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+            String NewJwt = jwtTokenProvider.generateToken(userId);
+            try {
+                exerciseService.deleteExercise(id);
+                return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
+            } catch (Exception e) {
+                return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(false);
+            }
+        }
+        @PutMapping("/update")
+        public ResponseEntity<Boolean> updateExercise(@RequestBody ExerciseDTO exerciseDTO, HttpServletRequest request) {
+
+            System.out.println("---------Update: ");
+            System.out.println("---------ExerciseDTO: ");
+            System.out.println(exerciseDTO.getReps());
+
+            String jwt = request.getHeader("Authorization");
+            String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+            String NewJwt = jwtTokenProvider.generateToken(userId);
+
+
+            Date date = new Date();
+
+            try {
+                ExerciseEntity exercise = new ExerciseEntity(exerciseDTO.getId(), Integer.parseInt(userId), exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
+                exerciseService.updateExercise(exercise);
+                return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
+            } catch (Exception e) {
+                return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(false);
+            }
+        }
 
      @PostMapping("/insert")
      public ResponseEntity<Boolean> insertExercise(@RequestBody ExerciseDTO exerciseDTO, HttpServletRequest request) {

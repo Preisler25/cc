@@ -31,4 +31,13 @@ public class ExerciseEntity {
 
     public ExerciseEntity() {
     }
+
+    public ExerciseEntity(int id, int i, String name, int reps, int weight, Date date) {
+        this.id = (long) id;
+        this.user_id = i;
+        this.name = name;
+        this.reps = reps;
+        this.weight = weight;
+        this.work_out_date = date;
+    }
 }

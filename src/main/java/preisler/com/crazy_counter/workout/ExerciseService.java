@@ -1,7 +1,10 @@
 package preisler.com.crazy_counter.workout;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
 
 
 @Service
@@ -24,5 +27,12 @@ public class ExerciseService {
         exerciseRepository.save(exercise);
     }
 
+    public void deleteExercise(Long id) {
+        exerciseRepository.deleteById(id);
+    }
 
+    @Transactional
+    public void updateExercise(ExerciseEntity exercise) {
+        exerciseRepository.save(exercise);
+    }
 }
