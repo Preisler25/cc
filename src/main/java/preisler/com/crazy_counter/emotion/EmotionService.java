@@ -26,18 +26,17 @@ public class EmotionService {
     }
 
     // Retrieve emotions by user ID and date
-    public List<EmotionEntity> GetEmotionByDate(String date, Integer userId) {
+    public List<EmotionEntity> GetEmotionByDate(Date date, Integer userId) {
         return (List<EmotionEntity>) emotionRepository.findByDate(date, userId);
     }
 
     // Insert a new emotion
-    public void AddNewEmotion(Integer userId, String emotion, String icon, String date, Integer value) {
+    public void AddNewEmotion(int userId, String emotion, String icon, Date date, Integer value) {
+        EmotionEntity emotionEntity = new EmotionEntity(emotion, icon, date, userId);
         try {
-            Date parsedDate = convertStringToDate(date);  // Convert String to Date
-            emotionRepository.insertEmotion(userId, emotion, icon, parsedDate, value);
-        } catch (ParseException e) {
+            emotionRepository.save(emotionEntity);
+        } catch ( Exception e) {
             e.printStackTrace();
-            // Handle error appropriately, such as logging or throwing a custom exception
         }
     }
 

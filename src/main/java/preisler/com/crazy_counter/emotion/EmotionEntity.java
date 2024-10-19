@@ -19,7 +19,7 @@ public class EmotionEntity {
     private String emoji;
 
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private Date emotion_date;
 
     private Integer user_id;
 
@@ -27,10 +27,10 @@ public class EmotionEntity {
     public EmotionEntity() {
     }
 
-    public EmotionEntity(String name, String emoji, Date date, Integer user_id) {
+    public EmotionEntity(String name, String emoji, Date emotion_date, Integer user_id) {
         this.name = name;
         this.emoji = emoji;
-        this.date = date;
+        this.emotion_date = emotion_date;
         this.user_id = user_id;
     }
 

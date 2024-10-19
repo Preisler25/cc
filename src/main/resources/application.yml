@@ -1,4 +1,10 @@
 spring:
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 15MB
+            file-size-threshold: 2MB
+
     datasource:
         url: jdbc:postgresql://localhost:5432/crazy_db
         username: alma
@@ -10,3 +16,6 @@ spring:
 jwt:
     secret: kx0EPBndowHiXz/Tcxiu0fNIx4LAQDz3tKc/nE3KvXggxcJ9ltOPbAv0CZIX2ltFvaEwgmqZ9VxPhddBcoiEbg==
     expiration: 900000
+
+file:
+    upload-dir: uploads/
