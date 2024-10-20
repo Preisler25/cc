@@ -30,7 +30,7 @@ public class UserService {
         return new UserSendBack(user.getName(), user.getId());
     }
 
-    public void register(String name, String password) {
+    public UserSendBack register(String name, String password) {
         // If user already exists, throw an exception
         if (this.findByName(name) != null) {
             throw new IllegalArgumentException("User already exists");
@@ -41,6 +41,8 @@ public class UserService {
         // Save user
         UserEntity user = new UserEntity(name, password);
         userRepository.save(user);
+
+        return new UserSendBack(user.getName(), user.getId());
     }
 
     public UserEntity findByName(String name) {

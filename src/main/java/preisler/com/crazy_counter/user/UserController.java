@@ -19,21 +19,42 @@ public class UserController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+
+    //TODO: not to fuck up thing i will have to convert this into a Boolean sendback
+
     @PostMapping("/login")
-    public ResponseEntity<UserSendBack> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-        UserSendBack user = userService.login(userDTO.getName(), userDTO.getPassword());
+    public ResponseEntity<Boolean> login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+        try {
+            UserSendBack user = userService.login(userDTO.getName(), userDTO.getPassword());
 
-        // Generate JWT token
-        String jwtToken = jwtTokenProvider.generateToken(user.getId().toString());
+            // Generate JWT token
+            String jwtToken = jwtTokenProvider.generateToken(user.getId().toString());
 
-        return ResponseEntity.ok().header("Authorization", "Bearer " + jwtToken).body(user);
+            return ResponseEntity.ok().header("Authorization", "Bearer " + jwtToken).body(true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody UserDTO userDTO) {
-        userService.register(userDTO.getName(), userDTO.getPassword());
-    }
+    public ResponseEntity<Boolean> register(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("trying reg");
+            //giving the user data to userService to save the user.
+            UserSendBack user = userService.register(userDTO.getName(), userDTO.getPassword());
 
+            System.out.println("trying token");
+            //getting the token for the user
+            String token = jwtTokenProvider.generateToken(user.getId().toString());
+
+            System.out.println("trying sending back");
+            //sending back the token for future request auth
+            return ResponseEntity.ok().header("Authorization", "Bearer " + token).body(true);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(false);
+        }
+    }
     @GetMapping("/byName")
     public UserEntity getUserByName(@RequestParam String name) {
         return userService.findByName(name);
