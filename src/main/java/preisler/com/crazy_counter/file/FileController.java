@@ -1,12 +1,13 @@
 package preisler.com.crazy_counter.file;
 
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/file")
@@ -21,33 +22,30 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String fileName = fileService.storeFile(file);
-            return ResponseEntity.ok("File uploaded successfully: " + fileName);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed: " + e.getMessage());
+            String fileUrl = fileService.uploadFile(file);
+            return ResponseEntity.ok(fileUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed.");
         }
     }
 
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+    @GetMapping("/{filename}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         try {
-            Resource resource = fileService.loadFileAsResource(fileName);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            Resource resource = fileService.serveFile(filename);
+            return ResponseEntity.ok().body(resource);
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
-        try {
-            fileService.deleteFile(fileName);
+    @DeleteMapping("/{filename}")
+    public ResponseEntity<String> deleteFile(@PathVariable String filename) {
+        boolean isDeleted = fileService.deleteFile(filename);
+        if (isDeleted) {
             return ResponseEntity.ok("File deleted successfully.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete the file: " + e.getMessage());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found.");
         }
     }
 }

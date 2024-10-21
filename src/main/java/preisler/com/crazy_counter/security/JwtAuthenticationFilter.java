@@ -33,6 +33,9 @@ public class JwtAuthenticationFilter implements Filter {
 
         final String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
+        //getting the user ip
+        String ipAddress = httpRequest.getRemoteAddr();
+        System.out.println("IP: " + ipAddress);
         System.out.println("Path: " + path);
 
         //if the request is for login or register, let it pass

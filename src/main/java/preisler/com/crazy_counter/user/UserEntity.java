@@ -16,6 +16,7 @@ public class UserEntity {
 
     private String name;
     private String password;
+    private String pfp;
 
 
     public UserEntity() {
@@ -24,5 +25,6 @@ public class UserEntity {
     public UserEntity(String name, String password) {
         this.name = name;
         this.password = password;
+        this.pfp = "default";
     }
 }
