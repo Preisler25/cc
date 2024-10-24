@@ -27,11 +27,16 @@ public class EmotionService {
 
     // Retrieve emotions by user ID and date
     public List<EmotionEntity> GetEmotionByDate(Date date, Integer userId) {
+
+        //covert the date to
+
         return (List<EmotionEntity>) emotionRepository.findByDate(date, userId);
     }
 
     // Insert a new emotion
-    public void AddNewEmotion(int userId, String emotion, String icon, Date date, Integer value) {
+    public void AddNewEmotion(int userId, String emotion, String icon, Date date) {
+
+
         EmotionEntity emotionEntity = new EmotionEntity(emotion, icon, date, userId);
         try {
             emotionRepository.save(emotionEntity);
