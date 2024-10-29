@@ -23,20 +23,20 @@ public class ExerciseController {
      @GetMapping("/getById")
      public ResponseEntity<Iterable<ExerciseEntity>> getExercisesByUserId(HttpServletRequest request) {
         String jwt = request.getHeader("Authorization");
-        String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+        Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
         String NewJwt = jwtTokenProvider.generateToken(userId);
-        return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(exerciseService.findByUserId(Integer.parseInt(userId)));
+        return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(exerciseService.findByUserId(userId));
      }
 
      @GetMapping("/getByDate")
-     public Iterable<ExerciseEntity> getExercisesByDate(@RequestParam Integer id, @RequestParam String date) {
+     public Iterable<ExerciseEntity> getExercisesByDate(@RequestParam Long id, @RequestParam String date) {
          return exerciseService.findByDate(date, id);
      }
 
      @DeleteMapping("/delete")
         public ResponseEntity<Boolean> deleteExercise(@RequestParam Long id, HttpServletRequest request) {
             String jwt = request.getHeader("Authorization");
-            String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+            Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
             String NewJwt = jwtTokenProvider.generateToken(userId);
             try {
                 exerciseService.deleteExercise(id);
@@ -53,14 +53,14 @@ public class ExerciseController {
             System.out.println(exerciseDTO.getReps());
 
             String jwt = request.getHeader("Authorization");
-            String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+            Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
             String NewJwt = jwtTokenProvider.generateToken(userId);
 
 
             Date date = new Date();
 
             try {
-                ExerciseEntity exercise = new ExerciseEntity(exerciseDTO.getId(), Integer.parseInt(userId), exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
+                ExerciseEntity exercise = new ExerciseEntity(userId , exerciseDTO.getId() , exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
                 exerciseService.updateExercise(exercise);
                 return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
             } catch (Exception e) {
@@ -71,11 +71,11 @@ public class ExerciseController {
      @PostMapping("/insert")
      public ResponseEntity<Boolean> insertExercise(@RequestBody ExerciseDTO exerciseDTO, HttpServletRequest request) {
             String jwt = request.getHeader("Authorization");
-            String userId = jwtTokenProvider.getUserIdFromToken(jwt);
+            Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
 
             Date date = new Date();
 
-            ExerciseEntity exercise = new ExerciseEntity(Integer.parseInt(userId), exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
+            ExerciseEntity exercise = new ExerciseEntity(userId, exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
             String NewJwt = jwtTokenProvider.generateToken(userId);
             try {
                 exerciseService.insertExercise(exercise);

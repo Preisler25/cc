@@ -26,7 +26,7 @@ public class EmotionService {
     }
 
     // Retrieve emotions by user ID and date
-    public List<EmotionEntity> GetEmotionByDate(Date date, Integer userId) {
+    public List<EmotionEntity> GetEmotionByDate(Date date, Long userId) {
 
         //covert the date to
 
@@ -34,7 +34,7 @@ public class EmotionService {
     }
 
     // Insert a new emotion
-    public void AddNewEmotion(int userId, String emotion, String icon, Date date) {
+    public void AddNewEmotion(Long userId, String emotion, String icon, Date date) {
 
 
         EmotionEntity emotionEntity = new EmotionEntity(emotion, icon, date, userId);
@@ -46,7 +46,7 @@ public class EmotionService {
     }
 
     // Delete an emotion by ID
-    public void deleteEmotionById(Integer id) {
+    public void deleteEmotionById(Long id) {
         emotionRepository.deleteEmotionById(id);
     }
 }

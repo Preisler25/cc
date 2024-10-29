@@ -15,11 +15,11 @@ public class ExerciseService {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public Iterable<ExerciseEntity> findByUserId(Integer  userId) {
+    public Iterable<ExerciseEntity> findByUserId(Long  userId) {
         return exerciseRepository.findByUserId(userId);
     }
 
-    public Iterable<ExerciseEntity> findByDate(String date, Integer userId) {
+    public Iterable<ExerciseEntity> findByDate(String date, Long userId) {
         return exerciseRepository.findByDate(date, userId);
     }
 

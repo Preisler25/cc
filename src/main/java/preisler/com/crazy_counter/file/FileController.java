@@ -1,10 +1,13 @@
 package preisler.com.crazy_counter.file;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import preisler.com.crazy_counter.security.JwtTokenProvider;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,24 +17,36 @@ import java.net.MalformedURLException;
 public class FileController {
 
     private final FileService fileService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService, JwtTokenProvider jwtTokenProvider) {
         this.fileService = fileService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping(value = "/upload",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> uploadFile(@RequestBody MultipartFile file, HttpServletRequest request) {
         try {
-            String fileUrl = fileService.uploadFile(file);
-            return ResponseEntity.ok(fileUrl);
+            //validate token and get user id
+            String token = request.getHeader("Authorization");
+            Long userId = jwtTokenProvider.getUserIdFromToken(token);
+            String newToken = jwtTokenProvider.generateToken(userId);
+
+
+            //calling the file service to upload the file and then save the file url
+            String fileUrl = fileService.uploadFile(userId ,file);
+
+            //returning the file url and the new token
+            return ResponseEntity.ok().header("Authorization", "Bearer " + newToken).body(fileUrl);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed.");
         }
     }
 
-    @GetMapping("/{filename}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+    @GetMapping("/get")
+    public ResponseEntity<Resource> serveFile(@RequestParam String filename) {
         try {
+            System.out.println("file-- gett--");
             Resource resource = fileService.serveFile(filename);
             return ResponseEntity.ok().body(resource);
         } catch (MalformedURLException e) {
@@ -39,7 +54,7 @@ public class FileController {
         }
     }
 
-    @DeleteMapping("/{filename}")
+    @DeleteMapping("/del/{filename}")
     public ResponseEntity<String> deleteFile(@PathVariable String filename) {
         boolean isDeleted = fileService.deleteFile(filename);
         if (isDeleted) {

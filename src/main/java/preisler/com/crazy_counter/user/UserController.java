@@ -28,7 +28,7 @@ public class UserController {
             UserSendBack user = userService.login(userDTO.getName(), userDTO.getPassword());
 
             // Generate JWT token
-            String jwtToken = jwtTokenProvider.generateToken(user.getId().toString());
+            String jwtToken = jwtTokenProvider.generateToken(user.getId());
 
             return ResponseEntity.ok().header("Authorization", "Bearer " + jwtToken).body(true);
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class UserController {
 
             System.out.println("trying token");
             //getting the token for the user
-            String token = jwtTokenProvider.generateToken(user.getId().toString());
+            String token = jwtTokenProvider.generateToken(user.getId());
 
             System.out.println("trying sending back");
             //sending back the token for future request auth
@@ -60,9 +60,21 @@ public class UserController {
         return userService.findByName(name);
     }
 
-    @GetMapping("/byId")
-    public UserEntity getUserById(@RequestParam Long id) {
-        return userService.findById(id);
+    @GetMapping("/whoAmI")
+    public ResponseEntity<UserSendBack> getUserById(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        Long userId = jwtTokenProvider.getUserIdFromToken(token);
+        String newToken = jwtTokenProvider.generateToken(userId);
+
+        UserEntity rawUser = userService.findById(userId);
+
+        UserSendBack user = new UserSendBack(
+                rawUser.getName(),
+                rawUser.getId(),
+                rawUser.getPfp()
+        );
+
+        return ResponseEntity.ok().header("Authorization", "Bearer " + newToken).body(user);
     }
 
 }

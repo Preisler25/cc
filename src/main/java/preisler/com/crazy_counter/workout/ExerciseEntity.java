@@ -13,7 +13,7 @@ public class ExerciseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int user_id;
+    private Long user_id;
     private String name;
     private int reps;
     private int weight;
@@ -21,7 +21,7 @@ public class ExerciseEntity {
     private Date work_out_date;
 
 
-    public ExerciseEntity(int user_id, String name, int reps, int weight, Date work_out_date) {
+    public ExerciseEntity(Long user_id, String name, int reps, int weight, Date work_out_date) {
         this.user_id = user_id;
         this.name = name;
         this.reps = reps;
@@ -32,9 +32,9 @@ public class ExerciseEntity {
     public ExerciseEntity() {
     }
 
-    public ExerciseEntity(int id, int i, String name, int reps, int weight, Date date) {
-        this.id = (long) id;
-        this.user_id = i;
+    public ExerciseEntity(Long user_id, Long id, String name, int reps, int weight, Date date) {
+        this.user_id = user_id;
+        this.id =  id;
         this.name = name;
         this.reps = reps;
         this.weight = weight;

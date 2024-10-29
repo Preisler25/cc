@@ -26,7 +26,7 @@ public class EmotionController {
     @GetMapping("/byDate")
     public ResponseEntity<List<EmotionEntity>> getEmotionsByDate(@RequestParam String date, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        Integer userId = Integer.parseInt(jwtTokenProvider.getUserIdFromToken(token));
+        Long userId = jwtTokenProvider.getUserIdFromToken(token);
 
         // Update the formatter to handle the full date-time format
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
@@ -36,7 +36,7 @@ public class EmotionController {
         Date convertedDate = java.sql.Date.valueOf(localDate);
 
         // Generate new JWT and return the emotions
-        String newJwt = jwtTokenProvider.generateToken(Integer.toString(userId));
+        String newJwt = jwtTokenProvider.generateToken(userId);
         return ResponseEntity.ok().header("Authorization", "Bearer " + newJwt).body(emotionService.GetEmotionByDate(convertedDate, userId));
     }
 
@@ -46,17 +46,17 @@ public class EmotionController {
     public ResponseEntity<Boolean> addEmotion(@RequestBody String emotion, @RequestBody String icon,  HttpServletRequest request) {
 
         String token = request.getHeader("Authorization");
-        int userId =  Integer.parseInt(jwtTokenProvider.getUserIdFromToken(token));
+        Long userId =  jwtTokenProvider.getUserIdFromToken(token);
 
         Date date = new Date();
         emotionService.AddNewEmotion(userId, emotion, icon, date);
 
-        String NewJwt = jwtTokenProvider.generateToken(Integer.toString(userId));
+        String NewJwt = jwtTokenProvider.generateToken(userId);
         return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
     }
 
     @DeleteMapping("/delete")
-    public void deleteEmotion(@RequestParam Integer id) {
+    public void deleteEmotion(@RequestParam Long id) {
         emotionService.deleteEmotionById(id);
     }
 }

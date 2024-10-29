@@ -20,13 +20,15 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private int jwtExpirationInSeconds;
 
-    public String generateToken(String id) {
+    public String generateToken(Long id) {
         System.out.println("--------generateToken---------");
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInSeconds);
 
+        String id_s = Long.toString(id);
+
         return Jwts.builder()
-                .setSubject(id)
+                .setSubject(id_s)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -38,7 +40,7 @@ public class JwtTokenProvider {
     }
 
     // Extract username from JWT token
-    public String getUserIdFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         System.out.println("--------getUserIdFromToken---------");
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
@@ -48,11 +50,12 @@ public class JwtTokenProvider {
         System.out.println("Token: " + token);
         try {
             System.out.println("try");
-            return Jwts.parser()
+            String id = Jwts.parser()
                     .setSigningKey(jwtSecret)
                     .setAllowedClockSkewSeconds(60)
                     .parseClaimsJws(token)
                     .getBody().getSubject();
+            return Long.parseLong(id);
         } catch (SignatureException e) {
             throw new RuntimeException("Invalid JWT signature");
         } catch (Exception e) {
