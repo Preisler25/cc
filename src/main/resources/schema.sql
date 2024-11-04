@@ -23,3 +23,12 @@ CREATE Table if not exists "exercises" (
     work_out_date date not null,
     FOREIGN KEY(user_id) REFERENCES "users"(id)
 );
+
+CREATE TABLE if not exists "user_relations" (
+    user1_id integer not null,
+    user2_id integer not null,
+    user2_accepted boolean not null,
+    FOREIGN KEY(user1_id) REFERENCES "users"(id),
+    FOREIGN KEY(user2_id) REFERENCES "users"(id),
+    PRIMARY KEY (user1_id, user2_id)
+);
