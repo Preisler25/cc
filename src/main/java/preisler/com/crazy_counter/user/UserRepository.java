@@ -24,4 +24,34 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Iterable<UserEntity> getFriendsById(Long userId);
 
 
+
+    //suggesting friends
+    @Query(value =
+            "SELECT * FROM users " +
+                    "WHERE id NOT IN (" +
+                    "    SELECT user2_id FROM user_relations WHERE user1_id = ?1 AND user2_accepted = TRUE " +
+                    "    UNION " +
+                    "    SELECT user1_id FROM user_relations WHERE user2_id = ?1 AND user2_accepted = TRUE" +
+                    ") AND id != ?1",
+            nativeQuery = true)
+    Iterable<UserEntity> getFriendSuggestions(Long userId);
+
+    //adding friend
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO user_relations (user1_id, user2_id, user2_accepted) VALUES (?1, ?2, FALSE)", nativeQuery = true)
+    void addFriend(Long user1_id, Long user2_id);
+
+    //accepting friend
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE user_relations SET user2_accepted = TRUE WHERE user1_id = ?1 AND user2_id = ?2", nativeQuery = true)
+    void acceptFriend(Long user1_id, Long user2_id);
+
+    //removing friend
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM user_relations WHERE user1_id = ?1 AND user2_id = ?2", nativeQuery = true)
+    void removeFriend(Long user1_id, Long user2_id);
+
 }
