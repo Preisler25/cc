@@ -25,6 +25,6 @@ public class UserEntity {
     public UserEntity(String name, String password) {
         this.name = name;
         this.password = password;
-        this.pfp = "default";
+        this.pfp = "default.png";
     }
 }
