@@ -3,6 +3,10 @@ package preisler.com.crazy_counter.friend;
 import org.springframework.stereotype.Service;
 import preisler.com.crazy_counter.user.UserEntity;
 import preisler.com.crazy_counter.user.UserRepository;
+import preisler.com.crazy_counter.user.UserSendBack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FriendService {
@@ -35,18 +39,32 @@ public class FriendService {
         return friends;
     }
 
+    public UserSendBack getFriendById(Long userId, Long friendId) {
+        System.out.println("Getting friend by id");
+        System.out.println("User id: " + userId);
+        System.out.println("Friend id: " + friendId);
+
+        if (!userRepository.isFriend(userId, friendId)) {
+            return null;
+        }
+        UserEntity friend = userRepository.findById(friendId).orElse(null);
+        if (friend == null) {
+            return null;
+        }
+        return new UserSendBack(friend.getName(), friend.getId(), friend.getPfp());
+    }
 
     //get friend suggestions by id
-    public Iterable<UserEntity> getFriendSuggestions(Long userId) {
+    public ArrayList<UserSendBack> getFriendSuggestions(Long userId) {
         System.out.println("Getting friend suggestions by id");
         System.out.println("User id: " + userId);
         System.out.println("Friend suggestions:");
         Iterable<UserEntity> friends = userRepository.getFriendSuggestions(userId);
+        ArrayList<UserSendBack> friendSuggestions = new ArrayList<>();
         for(UserEntity friend : friends){
-            System.out.println(friend.getName());
-            friend.setPassword(null);
+            friendSuggestions.add(new UserSendBack(friend.getName(), friend.getId(), friend.getPfp()));
         }
-        return friends;
+        return friendSuggestions;
     }
 
     //add friend
