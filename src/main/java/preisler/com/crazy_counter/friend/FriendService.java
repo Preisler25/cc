@@ -75,6 +75,18 @@ public class FriendService {
         userRepository.addFriend(user1_id, user2_id);
     }
 
+    public ArrayList<UserSendBack> getFriendRequests(Long userId) {
+        System.out.println("Getting friend requests by id");
+        System.out.println("User id: " + userId);
+        System.out.println("Friend requests:");
+        Iterable<UserEntity> friends = userRepository.getFriendRequests(userId);
+        ArrayList<UserSendBack> friendRequests = new ArrayList<>();
+        for(UserEntity friend : friends){
+            friendRequests.add(new UserSendBack(friend.getName(), friend.getId(), friend.getPfp()));
+        }
+        return friendRequests;
+    }
+
     //accept friend
     public void acceptFriend(Long user1_id, Long user2_id) {
         System.out.println("Accepting friend");

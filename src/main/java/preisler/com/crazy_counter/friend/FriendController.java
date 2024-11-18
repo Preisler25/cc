@@ -81,6 +81,42 @@ public class FriendController {
         return ResponseEntity.ok().header("Authorization", "Bearer " + newtoken).body(friend);
     }
 
+    @GetMapping(value = "/requests", produces = MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity<ArrayList<UserSendBack>> getFriendRequests(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+
+        Long userId = jwtTokenProvider.getUserIdFromToken(token);
+        String newtoken = jwtTokenProvider.generateToken(userId);
+
+        System.out.println("User id: " + userId);
+
+        ArrayList<UserSendBack> friends = friendService.getFriendRequests(userId);
+
+        return ResponseEntity.ok().header("Authorization", "Bearer " + newtoken).body(friends);
+    }
+
+    @PutMapping(value = "/accept", produces = MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity<Boolean> acceptFriend(HttpServletRequest request, @RequestBody Map<String, Integer> body) {
+        int friendId = body.get("friendId");
+        Long friendId1 = Long.valueOf(friendId);
+        System.out.println("------Accepting friend-----");
+        try {
+            String token = request.getHeader("Authorization");
+
+            Long userId = jwtTokenProvider.getUserIdFromToken(token);
+            String newtoken = jwtTokenProvider.generateToken(userId);
+
+            System.out.println("User id: " + userId);
+            System.out.println("Friend id: " + friendId);
+
+            friendService.acceptFriend(friendId1, userId);
+
+            return ResponseEntity.ok().header("Authorization", "Bearer " + newtoken).body(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<Boolean> addFriend(HttpServletRequest request, @RequestBody Map<String, String> body) {

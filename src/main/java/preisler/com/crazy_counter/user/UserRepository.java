@@ -47,7 +47,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 
     //checking where user has not accepted the request
-
+    @Query(value =
+            "SELECT * FROM users " +
+                    "WHERE id IN (" +
+                    "    SELECT user1_id FROM user_relations WHERE user2_id = ?1 AND user2_accepted = FALSE" +
+                    ") AND id != ?1",
+            nativeQuery = true)
+    Iterable<UserEntity> getFriendRequests(Long user2_id);
 
     //adding friend
     @Modifying
