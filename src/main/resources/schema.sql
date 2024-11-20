@@ -7,8 +7,14 @@ CREATE Table if not exists "users" (
 
 CREATE Table if not exists "emotions" (
     id serial primary key,
-    name varchar(255) not null,
-    emoji varchar(255) not null,
+    fear integer not null,
+    suprise integer not null,
+    sadness integer not null,
+    disgust integer not null,
+    anger integer not null,
+    anticipation integer not null,
+    joy integer not null,
+    trust integer not null,
     emotion_date date not null,
     user_id integer not null,
     FOREIGN KEY(user_id) REFERENCES "users"(id)

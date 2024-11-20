@@ -34,12 +34,9 @@ public class EmotionService {
     }
 
     // Insert a new emotion
-    public void AddNewEmotion(Long userId, String emotion, String icon, Date date) {
-
-
-        EmotionEntity emotionEntity = new EmotionEntity(emotion, icon, date, userId);
+    public void AddNewEmotion(EmotionEntity E) {
         try {
-            emotionRepository.save(emotionEntity);
+            emotionRepository.save(E);
         } catch ( Exception e) {
             e.printStackTrace();
         }

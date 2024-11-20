@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import preisler.com.crazy_counter.security.JwtTokenProvider;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/emotions")
@@ -40,19 +43,45 @@ public class EmotionController {
         return ResponseEntity.ok().header("Authorization", "Bearer " + newJwt).body(emotionService.GetEmotionByDate(convertedDate, userId));
     }
 
-
-
     @PostMapping("/add")
-    public ResponseEntity<Boolean> addEmotion(@RequestBody String emotion, @RequestBody String icon,  HttpServletRequest request) {
+    public ResponseEntity<Boolean> addEmotion(@RequestBody Map<String, Map<String, String>> body, HttpServletRequest request) {
+        System.out.println("add emotion");
 
+        double fear = Double.parseDouble(body.get("data").get("fear"));
+        double suprise = Double.parseDouble(body.get("data").get("suprise"));
+        double sadness = Double.parseDouble(body.get("data").get("sadness"));
+        double disgust = Double.parseDouble(body.get("data").get("disgust"));
+        double anger = Double.parseDouble(body.get("data").get("anger"));
+        double anticipation = Double.parseDouble(body.get("data").get("anticipation"));
+        double joy = Double.parseDouble(body.get("data").get("joy"));
+        double trust = Double.parseDouble(body.get("data").get("trust"));
+        String date = body.get("data").get("emotion_date");
+        Date convertedDate;
+
+        try {
+            LocalDateTime dateTime = LocalDateTime.parse(date);
+            convertedDate = java.sql.Date.valueOf(dateTime.toLocalDate());
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid date format: " + date, e);
+        }
+
+
+        //getting the token and from the token the user id
         String token = request.getHeader("Authorization");
         Long userId =  jwtTokenProvider.getUserIdFromToken(token);
 
-        Date date = new Date();
-        emotionService.AddNewEmotion(userId, emotion, icon, date);
+        //creating the emotion entity
+        EmotionEntity E = new EmotionEntity(fear, suprise, sadness, disgust, anger, anticipation, joy, trust, convertedDate, userId);
 
+        //adding the emotion to the database
+        emotionService.AddNewEmotion(E);
+
+        //generating a new token
         String NewJwt = jwtTokenProvider.generateToken(userId);
+
+        //returning the new token
         return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
+
     }
 
     @DeleteMapping("/delete")
