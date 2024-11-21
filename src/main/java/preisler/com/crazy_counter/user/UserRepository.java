@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 
     //checking if user is friend
-    @Query(value = "SELECT EXISTS(SELECT 1 FROM user_relations WHERE user1_id = ?1 AND user2_id = ?2 AND user2_accepted = TRUE)", nativeQuery = true)
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM user_relations WHERE user1_id = ?1 AND user2_id = ?2 AND user2_accepted = TRUE UNION SELECT 1 FROM user_relations WHERE user1_id = ?2 AND user2_id = ?1 AND user2_accepted = TRUE)", nativeQuery = true)
     boolean isFriend(Long user1_id, Long user2_id);
 
 
@@ -70,7 +70,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     //removing friend
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM user_relations WHERE user1_id = ?1 AND user2_id = ?2", nativeQuery = true)
+    @Query(value = "DELETE FROM user_relations WHERE user1_id = ?1 AND user2_id = ?2 OR user1_id = ?2 AND user2_id = ?1", nativeQuery = true)
     void removeFriend(Long user1_id, Long user2_id);
 
 }

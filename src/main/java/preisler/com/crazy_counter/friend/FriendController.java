@@ -78,6 +78,8 @@ public class FriendController {
 
         UserSendBack friend = friendService.getFriendById(userId, friendId);
 
+        System.out.println("Friend: " + friend);
+
         return ResponseEntity.ok().header("Authorization", "Bearer " + newtoken).body(friend);
     }
 

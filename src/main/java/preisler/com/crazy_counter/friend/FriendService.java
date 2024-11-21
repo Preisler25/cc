@@ -44,7 +44,10 @@ public class FriendService {
         System.out.println("User id: " + userId);
         System.out.println("Friend id: " + friendId);
 
+        System.out.println(userRepository.isFriend(userId, friendId));
+
         if (!userRepository.isFriend(userId, friendId)) {
+            System.out.println("Not friends");
             return null;
         }
         UserEntity friend = userRepository.findById(friendId).orElse(null);
@@ -97,7 +100,7 @@ public class FriendService {
 
     //remove friend
     public void removeFriend(Long user1_id, Long user2_id) {
-        System.out.println("Removing friend");
+        System.out.println("-----Removing friend-----");
         System.out.println("User 1 id: " + user1_id);
         System.out.println("User 2 id: " + user2_id);
         userRepository.removeFriend(user1_id, user2_id);

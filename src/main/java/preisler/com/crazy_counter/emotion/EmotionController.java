@@ -43,6 +43,21 @@ public class EmotionController {
         return ResponseEntity.ok().header("Authorization", "Bearer " + newJwt).body(emotionService.GetEmotionByDate(convertedDate, userId));
     }
 
+    @GetMapping("/byId")
+    public ResponseEntity<List<EmotionEntity>> getEmotionsByUserId(@RequestParam String FriendId, HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        Long userId = jwtTokenProvider.getUserIdFromToken(token);
+        String newJwt = jwtTokenProvider.generateToken(userId);
+
+        System.out.println("Friend id: " + FriendId);
+        System.out.println("User id: " + userId);
+
+        if (!FriendId.equals("-1")) {
+            return ResponseEntity.ok().header("Authorization", "Bearer " + newJwt).body(emotionService.GetEmotionByUserId(Long.parseLong(FriendId)));
+        }
+        return ResponseEntity.ok().header("Authorization", "Bearer " + newJwt).body(emotionService.GetEmotionByUserId(userId));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Boolean> addEmotion(@RequestBody Map<String, Map<String, String>> body, HttpServletRequest request) {
         System.out.println("add emotion");

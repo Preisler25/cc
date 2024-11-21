@@ -18,4 +18,8 @@ public interface EmotionRepository extends JpaRepository<EmotionEntity, Long> {
     // Delete emotion by id
     @Query(value = "DELETE FROM emotions WHERE id = ?1", nativeQuery = true)
     void deleteEmotionById(Long id);
+
+    // Find emotions by user ID with a limit
+    @Query(value = "SELECT * FROM emotions WHERE user_id = ?1 LIMIT ?2", nativeQuery = true)
+    Iterable<EmotionEntity> findFriendEmotionsByLim(Long userId, int limit);
 }

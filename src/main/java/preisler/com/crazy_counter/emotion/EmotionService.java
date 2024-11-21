@@ -42,6 +42,16 @@ public class EmotionService {
         }
     }
 
+    // Retrieve emotions by user ID
+    public List<EmotionEntity> GetEmotionByUserId(Long userId) {
+        return (List<EmotionEntity>) emotionRepository.findByUserId(userId);
+    }
+
+
+    public List<EmotionEntity> GetFriendEmotionsByLim(Long userId, int limit) {
+        return (List<EmotionEntity>) emotionRepository.findFriendEmotionsByLim(userId, limit);
+    }
+
     // Delete an emotion by ID
     public void deleteEmotionById(Long id) {
         emotionRepository.deleteEmotionById(id);
