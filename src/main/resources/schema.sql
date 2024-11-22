@@ -24,6 +24,7 @@ CREATE Table if not exists "exercises" (
     id serial primary key,
     user_id integer not null,
     name varchar(255) not null,
+    minutes integer not null,
     reps integer not null,
     weight integer not null,
     work_out_date date not null,

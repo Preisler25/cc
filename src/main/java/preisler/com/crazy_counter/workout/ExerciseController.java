@@ -60,7 +60,7 @@ public class ExerciseController {
             Date date = new Date();
 
             try {
-                ExerciseEntity exercise = new ExerciseEntity(userId , exerciseDTO.getId() , exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
+                ExerciseEntity exercise = new ExerciseEntity(userId , exerciseDTO.getId() , exerciseDTO.getName(),exerciseDTO.getMinutes() ,  exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
                 exerciseService.updateExercise(exercise);
                 return ResponseEntity.ok().header("Authorization", "Bearer " + NewJwt).body(true);
             } catch (Exception e) {
@@ -75,7 +75,7 @@ public class ExerciseController {
 
             Date date = new Date();
 
-            ExerciseEntity exercise = new ExerciseEntity(userId, exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getWeight(), date);
+            ExerciseEntity exercise = new ExerciseEntity(userId, exerciseDTO.getName(), exerciseDTO.getReps(), exerciseDTO.getMinutes(), exerciseDTO.getWeight(), date);
             String NewJwt = jwtTokenProvider.generateToken(userId);
             try {
                 exerciseService.insertExercise(exercise);
