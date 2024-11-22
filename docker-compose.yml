@@ -1,11 +1,36 @@
 version: '3.8'
 
 services:
+  app:
+    build:
+      context: .  # This assumes the Dockerfile is in the current directory
+    container_name: spring-boot-app
+    ports:
+      - "4000:4000" # Expose Spring Boot's port
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/crazy_db
+      SPRING_DATASOURCE_USERNAME: alma
+      SPRING_DATASOURCE_PASSWORD: alma
+      SPRING_JWT_SECRET: kx0EPBndowHiXz/Tcxiu0fNIx4LAQDz3tKc/nE3KvXggxcJ9ltOPbAv0CZIX2ltFvaEwgmqZ9VxPhddBcoiEbg==
+      SPRING_FILE_UPLOAD_DIR: /uploads
+    depends_on:
+      - db
+    volumes:
+      - ./uploads:/uploads # Mount a directory for file uploads
+    restart: always
+
   db:
     image: postgres:alpine
+    container_name: postgres-db
     environment:
       POSTGRES_DB: crazy_db
       POSTGRES_USER: alma
       POSTGRES_PASSWORD: alma
     ports:
-        - "5432:5432"
+      - "5432:5432" # Expose PostgreSQL port
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  db_data:
