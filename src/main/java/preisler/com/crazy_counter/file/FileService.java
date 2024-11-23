@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -25,6 +26,13 @@ public class FileService {
         this.userRepository = userRepository;
     }
 
+
+    //get all files name in the directory
+    public List<String> getAllFileNames() {
+        File directory = new File(uploadDir);
+        System.out.println("Directory: " + directory);
+        return List.of(directory.list());
+    }
 
 
     public String uploadFile(Long user_id, MultipartFile file) throws IOException {

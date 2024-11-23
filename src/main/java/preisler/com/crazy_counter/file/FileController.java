@@ -11,6 +11,7 @@ import preisler.com.crazy_counter.security.JwtTokenProvider;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/file")
@@ -53,6 +54,13 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @GetMapping("/getAllNames")
+    public ResponseEntity<List<String>> getAllFileNames(HttpServletRequest request) {
+        List<String> fileNames = fileService.getAllFileNames();
+        return ResponseEntity.ok().body(fileNames);
+    }
+
 
     @DeleteMapping("/del/{filename}")
     public ResponseEntity<String> deleteFile(@PathVariable String filename) {

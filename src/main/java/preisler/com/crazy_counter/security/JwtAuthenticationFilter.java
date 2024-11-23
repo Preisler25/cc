@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter implements Filter {
         System.out.println("Path: " + path);
 
         //if the request is for login or register, let it pass
-        if (path.equals("/user/login") || path.equals("/user/register") || path.equals("/file/get") ) {
+        if (path.equals("/user/login") || path.equals("/user/register") || path.equals("/file/get") || path.equals("/file/getAllNames")) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }
