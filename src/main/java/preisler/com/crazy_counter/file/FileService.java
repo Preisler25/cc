@@ -27,12 +27,22 @@ public class FileService {
     }
 
 
-    //get all files name in the directory
-    public List<String> getAllFileNames() {
+    public String[] getAllFileNames() {
         File directory = new File(uploadDir);
-        System.out.println("Directory: " + directory);
-        return List.of(directory.list());
+
+        System.out.println("upd dir: " + uploadDir);
+        System.out.println("pwd: " + directory.getAbsolutePath());
+        System.out.println("Directory exists: " + directory.exists());
+        System.out.println("Is directory: " + directory.isDirectory());
+        String[] files = directory.list();
+        if (files == null) {
+            System.out.println("Directory listing returned null");
+        } else {
+            System.out.println("Files found: " + String.join(", ", files));
+        }
+        return files;
     }
+
 
 
     public String uploadFile(Long user_id, MultipartFile file) throws IOException {

@@ -56,10 +56,12 @@ public class FileController {
     }
 
     @GetMapping("/getAllNames")
-    public ResponseEntity<List<String>> getAllFileNames(HttpServletRequest request) {
-        List<String> fileNames = fileService.getAllFileNames();
+    public ResponseEntity<String[]> getAllFileNames(HttpServletRequest request) {
+        String[] fileNames = fileService.getAllFileNames();
+        System.out.println(fileNames);
         return ResponseEntity.ok().body(fileNames);
     }
+    
 
 
     @DeleteMapping("/del/{filename}")

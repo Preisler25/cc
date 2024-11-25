@@ -16,7 +16,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./uploads:/uploads # Mount a directory for file uploads
+      - ./uploads:/uploads
     restart: always
 
   db:
