@@ -39,3 +39,13 @@ CREATE TABLE if not exists "user_relations" (
     FOREIGN KEY(user2_id) REFERENCES "users"(id),
     PRIMARY KEY (user1_id, user2_id)
 );
+
+CREATE TABLE if not exists "hangman" (
+    user1_id integer not null,
+    user2_id integer not null,
+    word varchar(255) not null,
+    user2_guessed boolean not null DEFAULT FALSE,
+    FOREIGN KEY(user1_id) REFERENCES "users"(id),
+    FOREIGN KEY(user2_id) REFERENCES "users"(id),
+    PRIMARY KEY (user1_id, user2_id)
+);

@@ -73,4 +73,37 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(value = "DELETE FROM user_relations WHERE user1_id = ?1 AND user2_id = ?2 OR user1_id = ?2 AND user2_id = ?1", nativeQuery = true)
     void removeFriend(Long user1_id, Long user2_id);
 
+
+    //adding hang man word to friend
+    //user 1 is is how sends the word
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO hangman (user1_id, user2_id, word) VALUES (?1, ?2, ?3)", nativeQuery = true)
+    void addHangmanWord(Long user1_id, Long user2_id, String word);
+
+    //updating word
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE hangman SET word = ?3 WHERE user1_id = ?1 AND user2_id = ?2", nativeQuery = true)
+    void updateHangmanWord(Long user1_id, Long user2_id, String word);
+
+    //checking he sent a word
+    @Query(value = "SELECT EXISTS(SELECT 1 FROM hangman WHERE user1_id = ?1 AND user2_id = ?2)", nativeQuery = true)
+    boolean haveHangmanWord(Long user1_id, Long user2_id);
+
+    //checking if user2 has guessed
+    @Query(value = "SELECT user2_guessed FROM hangman WHERE user1_id = ?1 AND user2_id = ?2", nativeQuery = true)
+    boolean user2Guessed(Long user1_id, Long user2_id);
+
+    //getting hangman word
+    @Query(value = "SELECT word FROM hangman WHERE user2_id = ?1 and user1_id = ?2", nativeQuery = true)
+    String getHangmanWord(Long user_id, Long friend_id);
+
+    //setting user2 guessed
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE hangman SET user2_guessed = TRUE WHERE user2_id = ?1 AND user1_id = ?2", nativeQuery = true)
+    void setUser2Guessed(Long user_id, Long friend_id);
+
+    //
 }
