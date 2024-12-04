@@ -3,12 +3,13 @@ package preisler.com.crazy_counter.hangman;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import preisler.com.crazy_counter.security.JwtTokenProvider;
 
-@RestController("/hangman")
+import java.util.Map;
+
+@RestController
+@RequestMapping("/hangman")
 public class HangmanController {
     HangmanService hangmanService;
     JwtTokenProvider jwtTokenProvider;
@@ -18,22 +19,24 @@ public class HangmanController {
         this.hangmanService = hangmanService;
     }
 
-    @GetMapping("/public/start")
+    @GetMapping(value = "/start", produces = "application/json")
     public ResponseEntity<GameEntity> startGame() {
+        System.out.println("Starting game");
         GameEntity gameEntity = hangmanService.startGame(Long.parseLong("1"), Long.parseLong("2"));
+        System.out.println(gameEntity);
         return ResponseEntity.ok().body(gameEntity);
     }
 
-    @GetMapping("/public/guess")
+    @GetMapping("/guess")
     public ResponseEntity<GuessSendBack> guess(HttpServletRequest request, @RequestParam String letter) {
         GuessSendBack guessSendBack = hangmanService.ifInTheWordWhatIndex(Long.parseLong("1"), Long.parseLong("2"), letter);
 
         return ResponseEntity.ok().body(guessSendBack);
     }
 
-    @GetMapping("/public/change")
-    public void changeTheWord(HttpServletRequest request, @RequestParam String word) {
-        hangmanService.changeTheWord(Long.parseLong("1"), Long.parseLong("2"), word);
+    @PutMapping("/change")
+    public void changeTheWord(HttpServletRequest request, @RequestBody Map<String, String> word) {
+        hangmanService.changeTheWord(Long.parseLong("1"), Long.parseLong("2"), word.get("word"));
     }
 
 

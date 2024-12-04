@@ -12,13 +12,12 @@ public class HangmanService {
 
     public HangmanService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.word = "Alma";
+        this.word = "alma";
     }
 
 
     public GameEntity startGame(Long userId, Long friendId) {
-        GameEntity gameEntity = new GameEntity(GameStatus.Guessing, "", word.length());
-        return gameEntity;
+        return new GameEntity(GameStatus.Guessing, "", word.length());
     }
 
 
