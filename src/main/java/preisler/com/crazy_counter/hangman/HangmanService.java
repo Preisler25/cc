@@ -17,7 +17,7 @@ public class HangmanService {
 
 
     public GameEntity startGame(Long userId, Long friendId) {
-        GameEntity gameEntity = new GameEntity("guessing", "", word.length());
+        GameEntity gameEntity = new GameEntity(GameStatus.Guessing, "", word.length());
         return gameEntity;
     }
 
