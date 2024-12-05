@@ -34,7 +34,17 @@ public class HangmanService {
             }
             return new GuessSendBack(true, indexes);
         } else {
-            return new GuessSendBack(false, null);
+            return new GuessSendBack(false, new java.util.ArrayList<Integer>());
+        }
+    }
+
+    public Boolean checkGuess(Long userId, Long friendId, String guess) {
+        if (guess.equals(word)) {
+            System.out.println("Guessed");
+            return true;
+        } else {
+            System.out.println("Not guessed");
+            return false;
         }
     }
 

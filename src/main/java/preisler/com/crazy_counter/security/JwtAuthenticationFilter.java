@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter implements Filter {
 
         System.out.println(path.equals("/hangman/start"));
         //if the request is for login or register, let it pass
-        if (path.equals("/user/login") || path.equals("/user/register") || path.equals("/file/get") || path.equals("/file/getAllNames" ) || path.equals("/hangman/start") || path.equals("/hangman/guess") || path.equals("/hangman/change")) {
+        if (path.equals("/user/login") || path.equals("/user/register") || path.equals("/file/get") || path.equals("/file/getAllNames" ) || path.equals("/hangman/start") || path.equals("/hangman/guess") || path.equals("/hangman/change") || path.equals("/hangman/guessWord")) {
             filterChain.doFilter(httpRequest, httpResponse);
             return;
         }

@@ -55,5 +55,12 @@ public class HangmanController {
         return ResponseEntity.ok().header("Authorization", "Bearer " + newtoken).body(gameEntity);
     }
 
+    @GetMapping("/guessWord")
+    public ResponseEntity<Boolean> checkGuess(HttpServletRequest request, @RequestParam String guess) {
+        Boolean result = hangmanService.checkGuess(Long.parseLong("1"), Long.parseLong("2"), guess);
+
+        return ResponseEntity.ok().body(result);
+    }
+
 
 }
