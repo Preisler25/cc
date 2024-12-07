@@ -8,7 +8,7 @@ import java.util.Date;
 public interface EmotionRepository extends JpaRepository<EmotionEntity, Long> {
 
     // Find all emotions for a user by userId
-    @Query(value = "SELECT * FROM emotions WHERE user_id = ?1 LIMIT 5;", nativeQuery = true)
+    @Query(value = "SELECT * FROM emotions WHERE user_id = ?1 ORDER BY emotion_date DESC LIMIT 5;", nativeQuery = true)
     Iterable<EmotionEntity> findByUserId(Long userId);
 
     // Find emotions by date and userId
